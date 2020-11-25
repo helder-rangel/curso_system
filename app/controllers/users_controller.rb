@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
     before_action :authorize_request, except: :create
     before_action :find_user, except: %i[create index]
+    # before_action :set_user, only: [:show, :update, :destroy]
   
     # GET /users
     def index
@@ -25,10 +26,17 @@ class UsersController < ApplicationController
     end
   
     # PUT /users/{username}
+    # def update
+    #   unless @user.update(user_params)
+    #     render json: { errors: @user.errors.full_messages },
+    #            status: :unprocessable_entity
+    #   end
+    # end
     def update
-      unless @user.update(user_params)
-        render json: { errors: @user.errors.full_messages },
-               status: :unprocessable_entity
+      if @user.update(user_params)
+        render json: @user
+      else
+        render json: @user.errors, status: :unprocessable_entity
       end
     end
   
@@ -43,6 +51,10 @@ class UsersController < ApplicationController
       @user = User.find_by_username!(params[:_username])
       rescue ActiveRecord::RecordNotFound
         render json: { errors: 'User not found' }, status: :not_found
+    end
+
+    def set_user
+      @user = User.find(params[:id])
     end
   
     def user_params
