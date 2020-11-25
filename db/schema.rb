@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_22_161257) do
+ActiveRecord::Schema.define(version: 2020_11_25_183009) do
 
   create_table "atividades", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "descricao"
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 2020_11_22_161257) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["turma_id"], name: "index_atividades_on_turma_id"
     t.index ["user_id"], name: "index_atividades_on_user_id"
+  end
+
+  create_table "entrega_atividades", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "link"
+    t.bigint "user_id", null: false
+    t.bigint "atividade_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["atividade_id"], name: "index_entrega_atividades_on_atividade_id"
+    t.index ["user_id"], name: "index_entrega_atividades_on_user_id"
   end
 
   create_table "perfils", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -53,6 +63,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_161257) do
 
   add_foreign_key "atividades", "turmas"
   add_foreign_key "atividades", "users"
+  add_foreign_key "entrega_atividades", "atividades"
+  add_foreign_key "entrega_atividades", "users"
   add_foreign_key "turmas", "users"
   add_foreign_key "users", "perfils"
 end
